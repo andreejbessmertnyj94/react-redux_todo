@@ -1,0 +1,7 @@
+.active-border {
+  border-color: gray;
+}
+
+.control-btns:focus {
+  box-shadow: none;
+}

@@ -1,0 +1,29 @@
+.completed {
+  text-decoration: line-through;
+  color: gray;
+}
+
+.trash-btn {
+  color: gray;
+}
+
+.trash-btn:hover {
+  color: black;
+  cursor: pointer;
+}
+
+.control-btns {
+  color: gray;
+}
+
+.control-btns:hover {
+  color: black;
+}
+
+.control-btns:focus {
+  box-shadow: none;
+}
+
+.tasks-list {
+  max-height: 350px;
+}
