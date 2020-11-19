@@ -3,24 +3,24 @@
   color: gray;
 }
 
-.trash-btn {
+.trash-button {
   color: gray;
 }
 
-.trash-btn:hover {
+.trash-button:hover {
   color: black;
   cursor: pointer;
 }
 
-.control-btns {
+.control-buttons {
   color: gray;
 }
 
-.control-btns:hover {
+.control-buttons:hover {
   color: black;
 }
 
-.control-btns:focus {
+.control-buttons:focus {
   box-shadow: none;
 }
 

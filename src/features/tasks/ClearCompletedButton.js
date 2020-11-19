@@ -33,7 +33,7 @@ export const ClearCompletedButton = () => {
     <button
       type="button"
       onClick={clearCompleted}
-      className={'col-3 btn text-break ' + display + styles['control-btns']}
+      className={'col-3 btn text-break ' + display + styles['control-buttons']}
     >
       Clear completed
     </button>

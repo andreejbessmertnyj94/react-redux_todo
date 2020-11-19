@@ -20,7 +20,7 @@ export const FiltersList = () => {
 
   const activeClass = (filter) => {
     return classNames.bind(styles)({
-      'control-btns': true,
+      'control-buttons': true,
       'active-border': filter.active,
     })
   }

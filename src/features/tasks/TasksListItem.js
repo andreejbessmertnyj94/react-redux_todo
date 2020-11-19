@@ -60,7 +60,7 @@ export const Task = React.memo(function Task({ task }) {
       <FontAwesomeIcon
         icon={faTrashAlt}
         onClick={deleteTask}
-        className={'col-2 align-self-center my-3 ' + styles['trash-btn']}
+        className={'col-2 align-self-center my-3 ' + styles['trash-button']}
       />
     </div>
   )

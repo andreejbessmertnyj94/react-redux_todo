@@ -24,7 +24,7 @@ export const TasksToDoCounter = () => {
     <button
       type="button"
       onClick={markAllCompleted}
-      className={'col-3 btn ' + styles['control-btns']}
+      className={'col-3 btn ' + styles['control-buttons']}
     >
       {numOfTasksToDo} tasks left
     </button>
