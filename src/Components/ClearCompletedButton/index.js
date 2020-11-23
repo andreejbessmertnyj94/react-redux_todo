@@ -5,9 +5,9 @@ import {
   completedTasksDeleted,
   selectTasksByFilter,
   selectTasksCount,
-} from './tasksSlice';
+} from '../../app/reducers/tasksSlice';
 
-export const ClearCompletedButton = () => {
+export default function ClearCompletedButton() {
   const completedTasks = useSelector((state) =>
     selectTasksByFilter(state, true)
   );

@@ -5,9 +5,9 @@ import {
   selectNumOfTasksToDo,
   allTasksCompleted,
   selectTasksCount,
-} from './tasksSlice';
+} from '../../app/reducers/tasksSlice';
 
-export const TasksToDoCounter = () => {
+export default function TasksToDoCounter() {
   const numOfTasksToDo = useSelector(selectNumOfTasksToDo);
   const dispatch = useDispatch();
 

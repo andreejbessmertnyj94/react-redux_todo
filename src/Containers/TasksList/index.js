@@ -1,11 +1,11 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-import { Task } from './TasksListItem';
-import { selectCurrentFilter } from '../tasksFilters/filtersSlice';
-import { selectTasksByFilter } from './tasksSlice';
+import Task from '../../Components/Task';
+import { selectCurrentFilter } from '../../app/reducers/filtersSlice';
+import { selectTasksByFilter } from '../../app/reducers/tasksSlice';
 
-export const TasksList = () => {
+export default function TasksList() {
   const currentFilter = useSelector(selectCurrentFilter);
 
   let filterCondition;

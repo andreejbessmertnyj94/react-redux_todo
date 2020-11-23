@@ -5,9 +5,9 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
 
-import { taskDeleted, taskStateChanged } from './tasksSlice';
+import { taskDeleted, taskStateChanged } from '../../app/reducers/tasksSlice';
 
-export const Task = React.memo(function Task({ task }) {
+export default React.memo(function Task({ task }) {
   const dispatch = useDispatch();
 
   let checkboxIcon, checkboxColor, textLineThrough;

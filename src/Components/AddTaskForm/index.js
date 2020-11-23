@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { nanoid } from '@reduxjs/toolkit';
 
-import { taskAdded } from './tasksSlice';
+import { taskAdded } from '../../app/reducers/tasksSlice';
 
-export const AddTaskForm = () => {
+export default function AddTaskForm() {
   const [content, setContent] = useState('');
 
   const dispatch = useDispatch();

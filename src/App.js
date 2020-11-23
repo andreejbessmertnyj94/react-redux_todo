@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { TasksList } from './components/tasks/TasksList';
-import { AddTaskForm } from './components/tasks/AddTaskForm';
-import { FiltersList } from './components/tasksFilters/FiltersList';
-import { TasksToDoCounter } from './components/tasks/TasksToDoCounter';
-import { ClearCompletedButton } from './components/tasks/ClearCompletedButton';
+import TasksList from './Containers/TasksList';
+import AddTaskForm from './Components/AddTaskForm';
+import FiltersList from './Containers/FiltersList';
+import TasksToDoCounter from './Components/TasksToDoCounter';
+import ClearCompletedButton from './Components/ClearCompletedButton';
 
 import './App.css';
 
