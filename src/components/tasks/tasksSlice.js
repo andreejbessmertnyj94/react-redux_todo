@@ -38,6 +38,7 @@ export const {
   selectAll: selectAllTasks,
   selectById: selectTaskById,
   selectIds: selectTaskIds,
+  selectTotal: selectTasksCount,
 } = tasksAdapter.getSelectors((state) => state.tasks);
 
 export const selectTasksByFilter = createSelector(

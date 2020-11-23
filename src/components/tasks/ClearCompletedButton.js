@@ -3,10 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import {
   completedTasksDeleted,
-  selectTaskIds,
   selectTasksByFilter,
+  selectTasksCount,
 } from './tasksSlice';
-import styles from './Tasks.module.css';
 
 export const ClearCompletedButton = () => {
   const completedTasks = useSelector((state) =>
@@ -15,14 +14,16 @@ export const ClearCompletedButton = () => {
   const numOfTasksCompleted = completedTasks.length;
   const dispatch = useDispatch();
 
-  if (useSelector(selectTaskIds).length === 0) {
+  const tasksCount = useSelector(selectTasksCount);
+
+  if (tasksCount === 0) {
     return null;
   }
 
-  let display = ' visible ';
+  let display = ' visible';
 
   if (numOfTasksCompleted === 0) {
-    display = ' invisible ';
+    display = ' invisible';
   }
 
   const clearCompleted = () => {
@@ -37,7 +38,7 @@ export const ClearCompletedButton = () => {
     <button
       type="button"
       onClick={clearCompleted}
-      className={'col-3 btn text-break ' + display + styles['control-buttons']}
+      className={'col-3 btn text-break control-buttons ' + display}
     >
       Clear completed
     </button>

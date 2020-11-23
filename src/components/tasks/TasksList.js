@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import { Task } from './TasksListItem';
 import { selectCurrentFilter } from '../tasksFilters/filtersSlice';
 import { selectTasksByFilter } from './tasksSlice';
-import styles from './Tasks.module.css';
 
 export const TasksList = () => {
   const currentFilter = useSelector(selectCurrentFilter);
@@ -31,7 +30,5 @@ export const TasksList = () => {
 
   const content = tasks.map((task) => <Task key={task.id} task={task} />);
 
-  return (
-    <div className={'overflow-auto ' + styles['tasks-list']}>{content}</div>
-  );
+  return <div className="overflow-auto tasks-list">{content}</div>;
 };

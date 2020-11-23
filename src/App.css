@@ -1,0 +1,37 @@
+.app-container {
+  max-width: 720px;
+}
+
+.tasks-list {
+  max-height: 350px;
+}
+
+.control-buttons {
+  color: gray;
+}
+
+.control-buttons:hover {
+  color: black;
+}
+
+.control-buttons:focus {
+  box-shadow: none;
+}
+
+.trash-button {
+  color: gray;
+}
+
+.trash-button:hover {
+  color: black;
+  cursor: pointer;
+}
+
+.completed {
+  text-decoration: line-through;
+  color: gray;
+}
+
+.active-border {
+  border-color: gray;
+}

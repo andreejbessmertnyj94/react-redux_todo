@@ -4,15 +4,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   selectNumOfTasksToDo,
   allTasksCompleted,
-  selectTaskIds,
+  selectTasksCount,
 } from './tasksSlice';
-import styles from './Tasks.module.css';
 
 export const TasksToDoCounter = () => {
   const numOfTasksToDo = useSelector(selectNumOfTasksToDo);
   const dispatch = useDispatch();
 
-  if (useSelector(selectTaskIds).length === 0) {
+  const tasksCount = useSelector(selectTasksCount);
+
+  if (tasksCount === 0) {
     return null;
   }
 
@@ -24,7 +25,7 @@ export const TasksToDoCounter = () => {
     <button
       type="button"
       onClick={markAllCompleted}
-      className={'col-3 btn ' + styles['control-buttons']}
+      className="col-3 btn control-buttons"
     >
       {numOfTasksToDo} tasks left
     </button>

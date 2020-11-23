@@ -1,29 +1,25 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
 
 import { taskDeleted, taskStateChanged } from './tasksSlice';
-import styles from './Tasks.module.css';
 
 export const Task = React.memo(function Task({ task }) {
   const dispatch = useDispatch();
 
-  const className = classNames.bind(styles)({
-    completed: task.completed,
-  });
-
-  let checkboxIcon, checkboxColor;
+  let checkboxIcon, checkboxColor, textLineThrough;
 
   if (task.completed) {
     checkboxIcon = faCheckCircle;
     checkboxColor = 'green';
+    textLineThrough = ' completed';
   } else {
     checkboxIcon = faCircle;
     checkboxColor = 'gray';
+    textLineThrough = '';
   }
 
   const onCheckboxChange = () => {
@@ -53,14 +49,16 @@ export const Task = React.memo(function Task({ task }) {
         color={checkboxColor}
       />
       <p
-        className={'col-8 align-self-center py-2 my-2 text-break ' + className}
+        className={
+          'col-8 align-self-center py-2 my-2 text-break' + textLineThrough
+        }
       >
         {task.content}
       </p>
       <FontAwesomeIcon
         icon={faTrashAlt}
         onClick={deleteTask}
-        className={'col-2 align-self-center my-3 ' + styles['trash-button']}
+        className="col-2 align-self-center my-3 trash-button"
       />
     </div>
   );

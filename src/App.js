@@ -6,9 +6,11 @@ import { FiltersList } from './components/tasksFilters/FiltersList';
 import { TasksToDoCounter } from './components/tasks/TasksToDoCounter';
 import { ClearCompletedButton } from './components/tasks/ClearCompletedButton';
 
+import './App.css';
+
 function App() {
   return (
-    <div className="container p-3" style={{ maxWidth: '720px' }}>
+    <div className="container p-3 app-container">
       <h2 className="text-center">Your todo list</h2>
       <div className="container mt-4 px-0 pt-4 pb-2 shadow rounded border">
         <AddTaskForm />
