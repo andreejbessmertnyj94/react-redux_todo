@@ -1,10 +1,10 @@
-import React from 'react'
+import React from 'react';
 
-import { TasksList } from './features/tasks/TasksList'
-import { AddTaskForm } from './features/tasks/AddTaskForm'
-import { FiltersList } from './features/tasksFilters/FiltersList'
-import { TasksToDoCounter } from './features/tasks/TasksToDoCounter'
-import { ClearCompletedButton } from './features/tasks/ClearCompletedButton'
+import { TasksList } from './components/tasks/TasksList';
+import { AddTaskForm } from './components/tasks/AddTaskForm';
+import { FiltersList } from './components/tasksFilters/FiltersList';
+import { TasksToDoCounter } from './components/tasks/TasksToDoCounter';
+import { ClearCompletedButton } from './components/tasks/ClearCompletedButton';
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

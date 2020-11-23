@@ -1,11 +1,11 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore } from '@reduxjs/toolkit';
 
-import tasksReducer from '../features/tasks/tasksSlice'
-import filtersReducer from '../features/tasksFilters/filtersSlice'
+import tasksReducer from '../components/tasks/tasksSlice';
+import filtersReducer from '../components/tasksFilters/filtersSlice';
 
 const persistedState = localStorage.getItem('reduxState')
   ? JSON.parse(localStorage.getItem('reduxState'))
-  : {}
+  : {};
 
 export default configureStore({
   reducer: {
@@ -13,4 +13,4 @@ export default configureStore({
     filters: filtersReducer,
   },
   preloadedState: persistedState,
-})
+});

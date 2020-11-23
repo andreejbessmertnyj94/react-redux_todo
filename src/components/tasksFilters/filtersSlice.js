@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit';
 
 export const filtersSlice = createSlice({
   name: 'filters',
@@ -12,17 +12,17 @@ export const filtersSlice = createSlice({
   },
   reducers: {
     setCurrent: (state, action) => {
-      state.currentFilter = action.payload
+      state.currentFilter = action.payload;
       Object.values(state.list).forEach((filter) => {
-        filter.active = filter.id === state.currentFilter
-      })
+        filter.active = filter.id === state.currentFilter;
+      });
     },
   },
-})
+});
 
-export const { setCurrent } = filtersSlice.actions
+export const { setCurrent } = filtersSlice.actions;
 
-export const selectFiltersList = (state) => state.filters.list
-export const selectCurrentFilter = (state) => state.filters.currentFilter
+export const selectFiltersList = (state) => state.filters.list;
+export const selectCurrentFilter = (state) => state.filters.currentFilter;
 
-export default filtersSlice.reducer
+export default filtersSlice.reducer;

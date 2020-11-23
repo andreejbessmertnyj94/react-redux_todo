@@ -1,24 +1,24 @@
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
   selectNumOfTasksToDo,
   allTasksCompleted,
   selectTaskIds,
-} from './tasksSlice'
-import styles from './Tasks.module.css'
+} from './tasksSlice';
+import styles from './Tasks.module.css';
 
 export const TasksToDoCounter = () => {
-  const numOfTasksToDo = useSelector(selectNumOfTasksToDo)
-  const dispatch = useDispatch()
+  const numOfTasksToDo = useSelector(selectNumOfTasksToDo);
+  const dispatch = useDispatch();
 
   if (useSelector(selectTaskIds).length === 0) {
-    return null
+    return null;
   }
 
   const markAllCompleted = () => {
-    dispatch(allTasksCompleted())
-  }
+    dispatch(allTasksCompleted());
+  };
 
   return (
     <button
@@ -28,5 +28,5 @@ export const TasksToDoCounter = () => {
     >
       {numOfTasksToDo} tasks left
     </button>
-  )
-}
+  );
+};

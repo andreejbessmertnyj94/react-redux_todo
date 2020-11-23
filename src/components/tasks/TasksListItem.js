@@ -1,29 +1,29 @@
-import React from 'react'
-import { useDispatch } from 'react-redux'
-import classNames from 'classnames/bind'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
-import { faCheckCircle } from '@fortawesome/free-regular-svg-icons'
-import { faCircle } from '@fortawesome/free-regular-svg-icons'
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import classNames from 'classnames/bind';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
+import { faCircle } from '@fortawesome/free-regular-svg-icons';
 
-import { taskDeleted, taskStateChanged } from './tasksSlice'
-import styles from './Tasks.module.css'
+import { taskDeleted, taskStateChanged } from './tasksSlice';
+import styles from './Tasks.module.css';
 
 export const Task = React.memo(function Task({ task }) {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const className = classNames.bind(styles)({
     completed: task.completed,
-  })
+  });
 
-  let checkboxIcon, checkboxColor
+  let checkboxIcon, checkboxColor;
 
   if (task.completed) {
-    checkboxIcon = faCheckCircle
-    checkboxColor = "green"
+    checkboxIcon = faCheckCircle;
+    checkboxColor = 'green';
   } else {
-    checkboxIcon = faCircle
-    checkboxColor = "gray"
+    checkboxIcon = faCircle;
+    checkboxColor = 'gray';
   }
 
   const onCheckboxChange = () => {
@@ -34,12 +34,12 @@ export const Task = React.memo(function Task({ task }) {
           completed: !task.completed,
         },
       })
-    )
-  }
+    );
+  };
 
   const deleteTask = () => {
-    dispatch(taskDeleted(task.id))
-  }
+    dispatch(taskDeleted(task.id));
+  };
 
   return (
     <div
@@ -63,5 +63,5 @@ export const Task = React.memo(function Task({ task }) {
         className={'col-2 align-self-center my-3 ' + styles['trash-button']}
       />
     </div>
-  )
-})
+  );
+});
