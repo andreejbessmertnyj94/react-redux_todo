@@ -5,7 +5,7 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
 
-import { deleteTask, taskStateChanged } from '../../app/reducers/tasksSlice';
+import { deleteTask, updateTask } from '../../app/reducers/tasksThunks';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 export default React.memo(function Task({ task }) {
@@ -25,27 +25,31 @@ export default React.memo(function Task({ task }) {
     textLineThrough = '';
   }
 
-  const onCheckboxChange = () => {
-    dispatch(
-      taskStateChanged({
-        id: task.id,
-        changes: {
-          completed: !task.completed,
-        },
-      })
-    );
+  const onCheckboxChange = async () => {
+    if (addRequestStatus === 'idle') {
+      try {
+        setAddRequestStatus('pending');
+        const resultAction = await dispatch(
+          updateTask({ id: task.id, completed: !task.completed })
+        );
+        unwrapResult(resultAction);
+      } catch (err) {
+        console.error('Failed to update the task: ', err);
+      } finally {
+        setAddRequestStatus('idle');
+      }
+    }
   };
 
   const onDeleteTask = async () => {
     if (addRequestStatus === 'idle') {
       try {
-        setAddRequestStatus('pending')
+        setAddRequestStatus('pending');
         const resultAction = await dispatch(deleteTask(task.id));
         unwrapResult(resultAction);
       } catch (err) {
+        setAddRequestStatus('idle');
         console.error('Failed to delete the task: ', err);
-      } finally {
-        setAddRequestStatus('idle')
       }
     }
   };

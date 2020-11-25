@@ -1,10 +1,9 @@
 import {
-  createAsyncThunk,
   createEntityAdapter,
   createSelector,
   createSlice,
 } from '@reduxjs/toolkit';
-import { client } from '../api-client';
+import * as thunks from './tasksThunks';
 
 const tasksAdapter = createEntityAdapter();
 
@@ -12,24 +11,6 @@ const initialState = tasksAdapter.getInitialState({
   status: 'idle',
   error: null,
 });
-
-export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async () => {
-  return await client.get('/tasks/list');
-});
-
-export const addNewTask = createAsyncThunk(
-  'tasks/addNewTask',
-  async (initialTask) => {
-    return await client.post('/tasks/create', { ...initialTask });
-  }
-);
-
-export const deleteTask = createAsyncThunk(
-  'tasks/deleteTask',
-  async (task_id) => {
-    return await client.delete(`/tasks/${task_id}/delete`);
-  }
-);
 
 function modifyPayload(payload) {
   // change mongodb ids to redux ids format
@@ -50,48 +31,51 @@ function modifyPayload(payload) {
 export const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
-  reducers: {
-    taskStateChanged: tasksAdapter.updateOne,
-    allTasksCompleted(state, action) {
+  reducers: {},
+  extraReducers: {
+    [thunks.fetchTasks.pending]: (state, action) => {
+      state.status = 'loading';
+    },
+    [thunks.fetchTasks.fulfilled]: (state, action) => {
+      state.status = 'succeeded';
+      tasksAdapter.upsertMany(state, modifyPayload(action.payload));
+    },
+    [thunks.fetchTasks.rejected]: (state, action) => {
+      state.status = 'failed';
+      state.error = action.error.message;
+    },
+    [thunks.addNewTask.fulfilled]: (state, action) => {
+      tasksAdapter.addMany(state, modifyPayload(action.payload));
+    },
+    [thunks.updateTask.fulfilled]: (state, action) => {
+      tasksAdapter.upsertMany(state, modifyPayload(action.payload));
+    },
+    [thunks.deleteTask.fulfilled]: (state, action) => {
+      tasksAdapter.removeOne(state, action.payload['_id']);
+    },
+    [thunks.markAllTasksCompleted.fulfilled]: (state, action) => {
       Object.values(state.entities).forEach((task) => {
         task.completed = true;
       });
     },
-    completedTasksDeleted: tasksAdapter.removeMany,
-  },
-  extraReducers: {
-    [fetchTasks.pending]: (state, action) => {
-      state.status = 'loading';
-    },
-    [fetchTasks.fulfilled]: (state, action) => {
-      state.status = 'succeeded';
-      tasksAdapter.upsertMany(state, modifyPayload(action.payload));
-    },
-    [fetchTasks.rejected]: (state, action) => {
-      state.status = 'failed';
-      state.error = action.error.message;
-    },
-    [addNewTask.fulfilled]: (state, action) => {
-      tasksAdapter.addMany(state, modifyPayload(action.payload));
-    },
-    [deleteTask.fulfilled]: (state, action) => {
-      tasksAdapter.removeOne(state, action.payload['_id']);
+    [thunks.deleteCompletedTasks.fulfilled]: (state, action) => {
+      const idsToDelete = Object.values(state.entities).reduce((acc, task) => {
+        if (task.completed === true) {
+          acc.push(task.id);
+        }
+        return acc;
+      }, []);
+      tasksAdapter.removeMany(state, idsToDelete);
     },
   },
 });
 
-export const {
-  taskStateChanged,
-  allTasksCompleted,
-  completedTasksDeleted,
-} = tasksSlice.actions;
+// export const {} = tasksSlice.actions;
 
 export default tasksSlice.reducer;
 
 export const {
   selectAll: selectAllTasks,
-  selectById: selectTaskById,
-  selectIds: selectTaskIds,
   selectTotal: selectTasksCount,
 } = tasksAdapter.getSelectors((state) => state.tasks);
 

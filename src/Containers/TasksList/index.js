@@ -3,7 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import Task from '../../Components/Task';
 import { selectCurrentFilter } from '../../app/reducers/filtersSlice';
-import { selectTasksByFilter, fetchTasks } from '../../app/reducers/tasksSlice';
+import { selectTasksByFilter } from '../../app/reducers/tasksSlice';
+import { fetchTasks } from '../../app/reducers/tasksThunks';
 
 export default function TasksList() {
   const dispatch = useDispatch();

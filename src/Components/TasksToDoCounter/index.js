@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
   selectNumOfTasksToDo,
-  allTasksCompleted,
   selectTasksCount,
 } from '../../app/reducers/tasksSlice';
+import { markAllTasksCompleted } from '../../app/reducers/tasksThunks';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 export default function TasksToDoCounter() {
+  const [addRequestStatus, setAddRequestStatus] = useState('idle');
+
   const numOfTasksToDo = useSelector(selectNumOfTasksToDo);
   const dispatch = useDispatch();
 
@@ -17,14 +20,24 @@ export default function TasksToDoCounter() {
     return null;
   }
 
-  const markAllCompleted = () => {
-    dispatch(allTasksCompleted());
+  const onMarkAllCompleted = async () => {
+    if (addRequestStatus === 'idle') {
+      try {
+        setAddRequestStatus('pending');
+        const resultAction = await dispatch(markAllTasksCompleted());
+        unwrapResult(resultAction);
+      } catch (err) {
+        console.error('Failed to update list: ', err);
+      } finally {
+        setAddRequestStatus('idle');
+      }
+    }
   };
 
   return (
     <button
       type="button"
-      onClick={markAllCompleted}
+      onClick={onMarkAllCompleted}
       className="col-3 btn control-buttons"
     >
       {numOfTasksToDo} tasks left
