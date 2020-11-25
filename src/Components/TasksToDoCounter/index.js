@@ -30,4 +30,4 @@ export default function TasksToDoCounter() {
       {numOfTasksToDo} tasks left
     </button>
   );
-};
+}

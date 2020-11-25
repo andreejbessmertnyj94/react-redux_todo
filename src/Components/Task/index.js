@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
 
-import { taskDeleted, taskStateChanged } from '../../app/reducers/tasksSlice';
+import { deleteTask, taskStateChanged } from '../../app/reducers/tasksSlice';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 export default React.memo(function Task({ task }) {
+  const [addRequestStatus, setAddRequestStatus] = useState('idle');
+
   const dispatch = useDispatch();
 
   let checkboxIcon, checkboxColor, textLineThrough;
@@ -33,8 +36,18 @@ export default React.memo(function Task({ task }) {
     );
   };
 
-  const deleteTask = () => {
-    dispatch(taskDeleted(task.id));
+  const onDeleteTask = async () => {
+    if (addRequestStatus === 'idle') {
+      try {
+        setAddRequestStatus('pending')
+        const resultAction = await dispatch(deleteTask(task.id));
+        unwrapResult(resultAction);
+      } catch (err) {
+        console.error('Failed to delete the task: ', err);
+      } finally {
+        setAddRequestStatus('idle')
+      }
+    }
   };
 
   return (
@@ -57,7 +70,7 @@ export default React.memo(function Task({ task }) {
       </p>
       <FontAwesomeIcon
         icon={faTrashAlt}
-        onClick={deleteTask}
+        onClick={onDeleteTask}
         className="col-2 align-self-center my-3 trash-button"
       />
     </div>

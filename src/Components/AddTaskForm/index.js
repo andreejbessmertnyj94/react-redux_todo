@@ -1,27 +1,34 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { nanoid } from '@reduxjs/toolkit';
+import { unwrapResult } from '@reduxjs/toolkit'
 
-import { taskAdded } from '../../app/reducers/tasksSlice';
+import { addNewTask } from '../../app/reducers/tasksSlice';
 
 export default function AddTaskForm() {
   const [content, setContent] = useState('');
+  const [addRequestStatus, setAddRequestStatus] = useState('idle')
 
   const dispatch = useDispatch();
 
   const onContentChanged = (e) => setContent(e.target.value);
 
-  const onEnterPressed = (e) => {
-    if (e.key === 'Enter' && content) {
-      dispatch(
-        taskAdded({
-          id: nanoid(),
-          content,
-          completed: false,
-        })
-      );
+  const canSave =
+      [content].every(Boolean) && addRequestStatus === 'idle'
 
-      setContent('');
+  const onEnterPressed = async (e) => {
+    if (e.key === 'Enter' && canSave) {
+      try {
+        setAddRequestStatus('pending')
+        const resultAction = await dispatch(
+            addNewTask({ content })
+        )
+        unwrapResult(resultAction)
+        setContent('')
+      } catch (err) {
+        console.error('Failed to save the task: ', err)
+      } finally {
+        setAddRequestStatus('idle')
+      }
     }
   };
 
@@ -37,4 +44,4 @@ export default function AddTaskForm() {
       />
     </div>
   );
-};
+}
