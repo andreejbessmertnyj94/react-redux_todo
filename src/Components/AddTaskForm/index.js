@@ -1,31 +1,39 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useCallback, useMemo, useState } from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 import { addNewTask } from '../../app/reducers/tasksThunks';
+import {selectRequestStatus, setBusy, setIdle} from "../../app/reducers/actionsSlice";
 
 export default function AddTaskForm() {
   const [content, setContent] = useState('');
-  const [addRequestStatus, setAddRequestStatus] = useState('idle');
+  const requestStatus = useSelector(selectRequestStatus);
 
   const dispatch = useDispatch();
 
-  const onContentChanged = (e) => setContent(e.target.value);
+  const onContentChanged = useCallback((e) => setContent(e.target.value), [
+    setContent,
+  ]);
 
-  const canSave =
-    0 < content.length && content.length <= 120 && addRequestStatus === 'idle';
+  const canSave = useMemo(
+    () =>
+      0 < content.length &&
+      content.length <= 120 &&
+        requestStatus === 'idle',
+    [content, requestStatus]
+  );
 
   const onEnterPressed = async (e) => {
     if (e.key === 'Enter' && canSave) {
       try {
-        setAddRequestStatus('pending');
+        dispatch(setBusy());
         const resultAction = await dispatch(addNewTask({ content }));
         unwrapResult(resultAction);
         setContent('');
       } catch (err) {
         console.error('Failed to save the task: ', err);
       } finally {
-        setAddRequestStatus('idle');
+        dispatch(setIdle());
       }
     }
   };

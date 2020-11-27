@@ -1,35 +1,28 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import {
-  selectNumOfTasksToDo,
-  selectTasksCount,
-} from '../../app/reducers/tasksSlice';
+import { selectNumOfTasksToDo } from '../../app/reducers/tasksSlice';
 import { markAllTasksCompleted } from '../../app/reducers/tasksThunks';
 import { unwrapResult } from '@reduxjs/toolkit';
+import {selectRequestStatus, setBusy, setIdle} from "../../app/reducers/actionsSlice";
 
 export default function TasksToDoCounter() {
-  const [addRequestStatus, setAddRequestStatus] = useState('idle');
+  const requestStatus = useSelector(selectRequestStatus);
 
   const numOfTasksToDo = useSelector(selectNumOfTasksToDo);
+
   const dispatch = useDispatch();
 
-  const tasksCount = useSelector(selectTasksCount);
-
-  if (tasksCount === 0) {
-    return null;
-  }
-
   const onMarkAllCompleted = async () => {
-    if (addRequestStatus === 'idle') {
+    if (requestStatus === 'idle') {
       try {
-        setAddRequestStatus('pending');
+        dispatch(setBusy());
         const resultAction = await dispatch(markAllTasksCompleted());
         unwrapResult(resultAction);
       } catch (err) {
         console.error('Failed to update list: ', err);
       } finally {
-        setAddRequestStatus('idle');
+        dispatch(setIdle());
       }
     }
   };

@@ -1,34 +1,24 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
 
 import { deleteTask, updateTask } from '../../app/reducers/tasksThunks';
-import { unwrapResult } from '@reduxjs/toolkit';
+import {selectRequestStatus, setBusy, setIdle} from "../../app/reducers/actionsSlice";
 
 export default React.memo(function Task({ task }) {
-  const [addRequestStatus, setAddRequestStatus] = useState('idle');
+  const requestStatus = useSelector(selectRequestStatus);
 
   const dispatch = useDispatch();
 
-  let checkboxIcon, checkboxColor, textLineThrough;
-
-  if (task.completed) {
-    checkboxIcon = faCheckCircle;
-    checkboxColor = 'green';
-    textLineThrough = ' completed';
-  } else {
-    checkboxIcon = faCircle;
-    checkboxColor = 'gray';
-    textLineThrough = '';
-  }
-
   const onCheckboxChange = async () => {
-    if (addRequestStatus === 'idle') {
+    if (requestStatus === 'idle') {
       try {
-        setAddRequestStatus('pending');
+        dispatch(setBusy());
         const resultAction = await dispatch(
           updateTask({ id: task.id, completed: !task.completed })
         );
@@ -36,40 +26,39 @@ export default React.memo(function Task({ task }) {
       } catch (err) {
         console.error('Failed to update the task: ', err);
       } finally {
-        setAddRequestStatus('idle');
+        dispatch(setIdle());
       }
     }
   };
 
   const onDeleteTask = async () => {
-    if (addRequestStatus === 'idle') {
+    if (requestStatus === 'idle') {
       try {
-        setAddRequestStatus('pending');
+        dispatch(setBusy());
         const resultAction = await dispatch(deleteTask(task.id));
         unwrapResult(resultAction);
       } catch (err) {
-        setAddRequestStatus('idle');
         console.error('Failed to delete the task: ', err);
+      } finally {
+        dispatch(setIdle());
       }
     }
   };
 
   return (
     <div
-      className="row justify-content-center mx-0 border-bottom"
+      className={
+        'row justify-content-center mx-0 border-bottom' +
+        (task.completed ? ' completed' : '')
+      }
       key={task.id}
     >
       <FontAwesomeIcon
-        icon={checkboxIcon}
+        icon={task.completed ? faCheckCircle : faCircle}
         onClick={onCheckboxChange}
-        className="col-2 align-self-center my-3"
-        color={checkboxColor}
+        className="col-2 align-self-center my-3 checkboxIcon"
       />
-      <p
-        className={
-          'col-8 align-self-center py-2 my-2 text-break' + textLineThrough
-        }
-      >
+      <p className="col-8 align-self-center py-2 my-2 text-break">
         {task.content}
       </p>
       <FontAwesomeIcon

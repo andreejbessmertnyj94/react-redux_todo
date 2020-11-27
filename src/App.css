@@ -27,11 +27,19 @@
   cursor: pointer;
 }
 
-.completed {
-  text-decoration: line-through;
-  color: gray;
-}
-
 .active-border {
   border-color: gray;
+}
+
+.completed > p {
+  color: gray;
+  text-decoration: line-through;
+}
+
+.completed > .checkboxIcon {
+  color: green !important;
+}
+
+.checkboxIcon {
+  color: gray;
 }
