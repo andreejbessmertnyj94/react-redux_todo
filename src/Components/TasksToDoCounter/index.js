@@ -1,9 +1,9 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 import { selectNumOfTasksToDo } from '../../app/reducers/tasksSlice';
 import { markAllTasksCompleted } from '../../app/reducers/tasksThunks';
-import { unwrapResult } from '@reduxjs/toolkit';
 import {
   selectRequestStatus,
   setBusy,

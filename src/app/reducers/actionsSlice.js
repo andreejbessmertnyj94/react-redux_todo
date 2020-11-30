@@ -1,22 +1,35 @@
-import { createSlice } from '@reduxjs/toolkit';
+import produce from 'immer';
 
-export const actionsSlice = createSlice({
-  name: 'actions',
-  initialState: {
-    requestStatus: 'idle',
-  },
-  reducers: {
-    setBusy: (state) => {
-      state.requestStatus = 'pending';
-    },
-    setIdle: (state) => {
-      state.requestStatus = 'idle';
-    },
-  },
-});
+const initialState = { requestStatus: 'idle' };
 
-export const { setBusy, setIdle } = actionsSlice.actions;
+const actions = {
+  setBusy: function () {
+    return {
+      type: 'actions/setBusy',
+    };
+  },
+  setIdle: function () {
+    return {
+      type: 'actions/setIdle',
+    };
+  },
+};
+
+export default function reducer(state = initialState, action) {
+  switch (action.type) {
+    case 'actions/setBusy':
+      return produce(state, (draftState) => {
+        draftState.requestStatus = 'pending';
+      });
+    case 'actions/setIdle':
+      return produce(state, (draftState) => {
+        draftState.requestStatus = 'idle';
+      });
+    default:
+      return state;
+  }
+};
+
+export const { setBusy, setIdle } = actions;
 
 export const selectRequestStatus = (state) => state.actions.requestStatus;
-
-export default actionsSlice.reducer;

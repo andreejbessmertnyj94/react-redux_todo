@@ -1,16 +1,11 @@
-import {
-  createEntityAdapter,
-  createSelector,
-  createSlice,
-} from '@reduxjs/toolkit';
-import * as thunks from './tasksThunks';
+import produce from 'immer';
 
-const tasksAdapter = createEntityAdapter();
-
-const initialState = tasksAdapter.getInitialState({
+const initialState = {
+  ids: [],
+  entities: {},
   status: 'idle',
   error: null,
-});
+};
 
 function modifyPayload(payload) {
   // change mongodb ids to redux ids format
@@ -25,64 +20,90 @@ function modifyPayload(payload) {
   });
 }
 
-export const tasksSlice = createSlice({
-  name: 'tasks',
-  initialState,
-  reducers: {},
-  extraReducers: {
-    [thunks.fetchTasks.pending]: (state, action) => {
-      state.status = 'loading';
-    },
-    [thunks.fetchTasks.fulfilled]: (state, action) => {
-      state.status = 'succeeded';
-      tasksAdapter.upsertMany(state, modifyPayload(action.payload));
-    },
-    [thunks.fetchTasks.rejected]: (state, action) => {
-      state.status = 'failed';
-      state.error = action.error.message;
-    },
-    [thunks.addNewTask.fulfilled]: (state, action) => {
-      tasksAdapter.addMany(state, modifyPayload(action.payload));
-    },
-    [thunks.updateTask.fulfilled]: (state, action) => {
-      tasksAdapter.upsertMany(state, modifyPayload(action.payload));
-    },
-    [thunks.deleteTask.fulfilled]: (state, action) => {
-      tasksAdapter.removeOne(state, action.payload[0]['_id']);
-    },
-    [thunks.markAllTasksCompleted.fulfilled]: (state, action) => {
-      Object.values(state.entities).forEach((task) => {
-        task.completed = true;
+export default function reducer(state = initialState, action) {
+  switch (action.type) {
+    case 'tasks/fetchTasks/pending':
+      return produce(state, (draftState) => {
+        draftState.status = 'loading';
       });
-    },
-    [thunks.deleteCompletedTasks.fulfilled]: (state, action) => {
-      const idsToDelete = Object.values(state.entities).reduce((acc, task) => {
-        if (task.completed === true) {
-          acc.push(task.id);
-        }
-        return acc;
-      }, []);
-      tasksAdapter.removeMany(state, idsToDelete);
-    },
-  },
-});
+    case 'tasks/fetchTasks/fulfilled':
+      return produce(state, (draftState) => {
+        draftState.status = 'succeeded';
+        modifyPayload(action.payload).forEach((task) => {
+          draftState.ids.push(task.id);
+          draftState.entities[task.id] = {
+            completed: task.completed,
+            content: task.content,
+            id: task.id,
+          };
+        });
+      });
+    case 'tasks/fetchTasks/rejected':
+      return produce(state, (draftState) => {
+        draftState.status = 'failed';
+        draftState.error = action.error.message;
+      });
+    case 'tasks/addNewTask/fulfilled':
+      return produce(state, (draftState) => {
+        modifyPayload(action.payload).forEach((task) => {
+          draftState.ids.push(task.id);
+          draftState.entities[task.id] = {
+            completed: task.completed,
+            content: task.content,
+            id: task.id,
+          };
+        });
+      });
+    case 'tasks/updateTask/fulfilled':
+      return produce(state, (draftState) => {
+        modifyPayload(action.payload).forEach((task) => {
+          draftState.entities[task.id] = {
+            completed: task.completed,
+            content: task.content,
+            id: task.id,
+          };
+        });
+      });
+    case 'tasks/deleteTask/fulfilled':
+      return produce(state, (draftState) => {
+        const taskId = action.payload[0]['_id'];
+        draftState.ids = draftState.ids.filter((id) => id !== taskId);
+        delete draftState.entities[taskId];
+      });
+    case 'tasks/markAllTasksCompleted/fulfilled':
+      return produce(state, (draftState) => {
+        Object.values(draftState.entities).forEach((task) => {
+          task.completed = true;
+        });
+      });
+    case 'tasks/deleteCompletedTasks/fulfilled':
+      return produce(state, (draftState) => {
+        const idsToDelete = Object.values(state.entities).reduce(
+          (acc, task) => {
+            if (task.completed === true) {
+              acc.push(task.id);
+            }
+            return acc;
+          },
+          []
+        );
+        idsToDelete.forEach((taskId) => {
+          draftState.ids = draftState.ids.filter((id) => id !== taskId);
+          delete draftState.entities[taskId];
+        });
+      });
+    default:
+      return state;
+  }
+}
 
-export default tasksSlice.reducer;
+export const selectTasksCount = (state) => state.tasks.ids.length;
+export const selectTasksByFilter = (state, tasksFilter) => {
+  const tasks = Object.values(state.tasks.entities);
 
-export const {
-  selectAll: selectAllTasks,
-  selectTotal: selectTasksCount,
-} = tasksAdapter.getSelectors((state) => state.tasks);
-
-export const selectTasksByFilter = createSelector(
-  [selectAllTasks, (state, tasksFilter) => tasksFilter],
-  (tasks, tasksFilter) =>
-    tasksFilter === null
-      ? tasks
-      : tasks.filter((task) => task.completed === tasksFilter)
-);
-
-export const selectNumOfTasksToDo = createSelector(
-  selectAllTasks,
-  (tasks) => tasks.filter((task) => !task.completed).length
-);
+  return tasksFilter === null
+    ? tasks
+    : tasks.filter((task) => task.completed === tasksFilter);
+};
+export const selectNumOfTasksToDo = (state) =>
+  Object.values(state.tasks.entities).filter((task) => !task.completed).length;

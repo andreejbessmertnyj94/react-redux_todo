@@ -1,4 +1,5 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 
 import tasksReducer from './reducers/tasksSlice';
@@ -11,4 +12,7 @@ const reducer = combineReducers({
   actions: actionsReducer,
 });
 
-export default createStore(reducer, applyMiddleware(thunk));
+export default createStore(
+  reducer,
+  composeWithDevTools(applyMiddleware(thunk))
+);
