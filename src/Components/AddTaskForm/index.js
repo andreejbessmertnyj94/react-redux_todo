@@ -1,9 +1,13 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 import { addNewTask } from '../../app/reducers/tasksThunks';
-import {selectRequestStatus, setBusy, setIdle} from "../../app/reducers/actionsSlice";
+import {
+  selectRequestStatus,
+  setBusy,
+  setIdle,
+} from '../../app/reducers/actionsSlice';
 
 export default function AddTaskForm() {
   const [content, setContent] = useState('');
@@ -17,9 +21,7 @@ export default function AddTaskForm() {
 
   const canSave = useMemo(
     () =>
-      0 < content.length &&
-      content.length <= 120 &&
-        requestStatus === 'idle',
+      0 < content.length && content.length <= 120 && requestStatus === 'idle',
     [content, requestStatus]
   );
 

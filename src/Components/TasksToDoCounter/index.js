@@ -4,7 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectNumOfTasksToDo } from '../../app/reducers/tasksSlice';
 import { markAllTasksCompleted } from '../../app/reducers/tasksThunks';
 import { unwrapResult } from '@reduxjs/toolkit';
-import {selectRequestStatus, setBusy, setIdle} from "../../app/reducers/actionsSlice";
+import {
+  selectRequestStatus,
+  setBusy,
+  setIdle,
+} from '../../app/reducers/actionsSlice';
 
 export default function TasksToDoCounter() {
   const requestStatus = useSelector(selectRequestStatus);

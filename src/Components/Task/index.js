@@ -1,5 +1,5 @@
 import React from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,7 +8,11 @@ import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
 
 import { deleteTask, updateTask } from '../../app/reducers/tasksThunks';
-import {selectRequestStatus, setBusy, setIdle} from "../../app/reducers/actionsSlice";
+import {
+  selectRequestStatus,
+  setBusy,
+  setIdle,
+} from '../../app/reducers/actionsSlice';
 
 export default React.memo(function Task({ task }) {
   const requestStatus = useSelector(selectRequestStatus);

@@ -14,9 +14,6 @@ const initialState = tasksAdapter.getInitialState({
 
 function modifyPayload(payload) {
   // change mongodb ids to redux ids format
-  if (!Array.isArray(payload)) {
-    payload = [payload];
-  }
   return payload.map((obj) => {
     Object.defineProperty(
       obj,
@@ -51,7 +48,7 @@ export const tasksSlice = createSlice({
       tasksAdapter.upsertMany(state, modifyPayload(action.payload));
     },
     [thunks.deleteTask.fulfilled]: (state, action) => {
-      tasksAdapter.removeOne(state, action.payload['_id']);
+      tasksAdapter.removeOne(state, action.payload[0]['_id']);
     },
     [thunks.markAllTasksCompleted.fulfilled]: (state, action) => {
       Object.values(state.entities).forEach((task) => {
@@ -69,8 +66,6 @@ export const tasksSlice = createSlice({
     },
   },
 });
-
-// export const {} = tasksSlice.actions;
 
 export default tasksSlice.reducer;
 
