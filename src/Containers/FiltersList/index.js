@@ -1,7 +1,10 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { selectFiltersList, setCurrent } from '../../app/reducers/filtersSlice';
+import {
+  selectFiltersList,
+  setCurrent,
+} from '../../app/reducers/filtersReducer';
 
 const Filter = React.memo(function Filter({ filter }) {
   const dispatch = useDispatch();

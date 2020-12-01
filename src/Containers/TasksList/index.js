@@ -2,8 +2,8 @@ import React, { useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Task from '../../Components/Task';
-import { selectCurrentFilter } from '../../app/reducers/filtersSlice';
-import { selectTasksByFilter } from '../../app/reducers/tasksSlice';
+import { selectCurrentFilter } from '../../app/reducers/filtersReducer';
+import { selectTasksByFilter } from '../../app/reducers/tasksReducer';
 import { fetchTasks } from '../../app/reducers/tasksThunks';
 
 export default function TasksList() {

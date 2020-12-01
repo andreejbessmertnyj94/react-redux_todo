@@ -15,7 +15,7 @@ import {
   selectRequestStatus,
   setBusy,
   setIdle,
-} from '../../app/reducers/actionsSlice';
+} from '../../app/reducers/actionsReducer';
 
 export default React.memo(function Task({ task }) {
   const requestStatus = useSelector(selectRequestStatus);

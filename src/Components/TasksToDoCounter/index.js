@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { selectNumOfTasksToDo } from '../../app/reducers/tasksSlice';
+import { selectNumOfTasksToDo } from '../../app/reducers/tasksReducer';
 import {
   markAllTasksCompleted,
   unwrapAsyncResult,
@@ -10,7 +10,7 @@ import {
   selectRequestStatus,
   setBusy,
   setIdle,
-} from '../../app/reducers/actionsSlice';
+} from '../../app/reducers/actionsReducer';
 
 export default function TasksToDoCounter() {
   const requestStatus = useSelector(selectRequestStatus);

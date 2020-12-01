@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-import { selectTasksCount } from '../../app/reducers/tasksSlice';
+import { selectTasksCount } from '../../app/reducers/tasksReducer';
 import TasksToDoCounter from '../../Components/TasksToDoCounter';
 import FiltersList from '../FiltersList';
 import ClearCompletedButton from '../../Components/ClearCompletedButton';

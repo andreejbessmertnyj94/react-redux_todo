@@ -6,7 +6,7 @@ import {
   selectRequestStatus,
   setBusy,
   setIdle,
-} from '../../app/reducers/actionsSlice';
+} from '../../app/reducers/actionsReducer';
 
 export default function AddTaskForm() {
   const [content, setContent] = useState('');

@@ -2,9 +2,9 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunkMiddleware from 'redux-thunk';
 
-import tasksReducer from './reducers/tasksSlice';
-import filtersReducer from './reducers/filtersSlice';
-import actionsReducer from './reducers/actionsSlice';
+import tasksReducer from './reducers/tasksReducer';
+import filtersReducer from './reducers/filtersReducer';
+import actionsReducer from './reducers/actionsReducer';
 
 const reducer = combineReducers({
   tasks: tasksReducer,
