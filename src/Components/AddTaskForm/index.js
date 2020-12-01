@@ -1,8 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { unwrapResult } from '@reduxjs/toolkit';
 
-import { addNewTask } from '../../app/reducers/tasksThunks';
+import { addNewTask, unwrapAsyncResult } from '../../app/reducers/tasksThunks';
 import {
   selectRequestStatus,
   setBusy,
@@ -30,7 +29,7 @@ export default function AddTaskForm() {
       try {
         dispatch(setBusy());
         const resultAction = await dispatch(addNewTask({ content }));
-        unwrapResult(resultAction);
+        unwrapAsyncResult(resultAction);
         setContent('');
       } catch (err) {
         console.error('Failed to save the task: ', err);

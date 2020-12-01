@@ -1,9 +1,11 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { unwrapResult } from '@reduxjs/toolkit';
 
 import { selectNumOfTasksToDo } from '../../app/reducers/tasksSlice';
-import { markAllTasksCompleted } from '../../app/reducers/tasksThunks';
+import {
+  markAllTasksCompleted,
+  unwrapAsyncResult,
+} from '../../app/reducers/tasksThunks';
 import {
   selectRequestStatus,
   setBusy,
@@ -22,7 +24,7 @@ export default function TasksToDoCounter() {
       try {
         dispatch(setBusy());
         const resultAction = await dispatch(markAllTasksCompleted());
-        unwrapResult(resultAction);
+        unwrapAsyncResult(resultAction);
       } catch (err) {
         console.error('Failed to update list: ', err);
       } finally {

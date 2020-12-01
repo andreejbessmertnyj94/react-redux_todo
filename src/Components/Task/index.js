@@ -1,13 +1,16 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { unwrapResult } from '@reduxjs/toolkit';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
 
-import { deleteTask, updateTask } from '../../app/reducers/tasksThunks';
+import {
+  deleteTask,
+  updateTask,
+  unwrapAsyncResult,
+} from '../../app/reducers/tasksThunks';
 import {
   selectRequestStatus,
   setBusy,
@@ -26,7 +29,7 @@ export default React.memo(function Task({ task }) {
         const resultAction = await dispatch(
           updateTask({ id: task.id, completed: !task.completed })
         );
-        unwrapResult(resultAction);
+        unwrapAsyncResult(resultAction);
       } catch (err) {
         console.error('Failed to update the task: ', err);
       } finally {
@@ -40,7 +43,7 @@ export default React.memo(function Task({ task }) {
       try {
         dispatch(setBusy());
         const resultAction = await dispatch(deleteTask(task.id));
-        unwrapResult(resultAction);
+        unwrapAsyncResult(resultAction);
       } catch (err) {
         console.error('Failed to delete the task: ', err);
       } finally {

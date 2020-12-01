@@ -1,9 +1,11 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { unwrapResult } from '@reduxjs/toolkit';
 
 import { selectTasksByFilter } from '../../app/reducers/tasksSlice';
-import { deleteCompletedTasks } from '../../app/reducers/tasksThunks';
+import {
+  deleteCompletedTasks,
+  unwrapAsyncResult,
+} from '../../app/reducers/tasksThunks';
 import {
   selectRequestStatus,
   setBusy,
@@ -26,7 +28,7 @@ export default function ClearCompletedButton() {
       try {
         dispatch(setBusy());
         const resultAction = await dispatch(deleteCompletedTasks());
-        unwrapResult(resultAction);
+        unwrapAsyncResult(resultAction);
       } catch (err) {
         console.error('Failed to delete completed: ', err);
       } finally {
