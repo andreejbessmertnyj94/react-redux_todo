@@ -13,7 +13,6 @@ const Filter = React.memo(function Filter({ filter }) {
   return (
     <button
       type="button"
-      key={filter.id}
       onClick={setFilter}
       className={
         'btn px-2 control-buttons' + (filter.active ? ' active-border' : '')

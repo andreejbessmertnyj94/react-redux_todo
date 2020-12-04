@@ -1,22 +1,38 @@
 import React, { useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 import Task from '../../Components/Task';
 import { selectCurrentFilter } from '../../app/reducers/filtersSlice';
 import { selectTasksByFilter } from '../../app/reducers/tasksSlice';
 import { fetchTasks } from '../../app/reducers/tasksThunks';
+import Alert from '../../Components/Alert';
+import { selectAlert, setAlert } from '../../app/reducers/actionsSlice';
 
 export default function TasksList() {
-  const dispatch = useDispatch();
   const currentFilter = useSelector(selectCurrentFilter);
+  const alert = useSelector(selectAlert);
+  const { status: tasksStatus } = useSelector((state) => state.tasks);
 
-  const { status: taskStatus, error } = useSelector((state) => state.tasks);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (taskStatus === 'idle') {
-      dispatch(fetchTasks());
+    if (tasksStatus === 'idle') {
+      (async () => {
+        try {
+          const resultAction = await dispatch(fetchTasks());
+          unwrapResult(resultAction);
+        } catch (err) {
+          dispatch(
+            setAlert({
+              message: `Failed to get tasks: ${err.message}`,
+              alertType: 'alert-danger',
+            })
+          );
+        }
+      })();
     }
-  }, [taskStatus, dispatch]);
+  }, [tasksStatus, dispatch]);
 
   const filterCondition = useMemo(() => {
     switch (currentFilter) {
@@ -37,7 +53,7 @@ export default function TasksList() {
 
   return (
     <div className="overflow-auto tasks-list">
-      {taskStatus === 'loading' && (
+      {tasksStatus === 'loading' && (
         <div className="d-flex justify-content-center">
           <div className="progress w-50">
             <div
@@ -49,9 +65,13 @@ export default function TasksList() {
           </div>
         </div>
       )}
-      {taskStatus === 'succeeded' &&
+      {tasksStatus === 'succeeded' &&
         tasks.map((task) => <Task key={task.id} task={task} />)}
-      {taskStatus === 'failed' && <div className="text-center">{error}</div>}
+      {tasksStatus === 'failed' && alert && (
+        <div className="d-flex justify-content-center">
+          <Alert />
+        </div>
+      )}
     </div>
   );
 }

@@ -12,7 +12,6 @@ import {
 
 export default function ClearCompletedButton() {
   const requestStatus = useSelector(selectRequestStatus);
-
   const completedTasks = useSelector((state) =>
     selectTasksByFilter(state, true)
   );

@@ -1,9 +1,18 @@
 // A tiny wrapper around fetch(), borrowed from
 // https://kentcdodds.com/blog/replace-axios-with-a-simple-custom-fetch-wrapper
 
-export async function client(endpoint, { body, ...customConfig } = {}) {
-  const headers = { 'Content-Type': 'application/json' };
+export const localStorageKey = 'auth_token';
 
+export function logout() {
+  localStorage.removeItem(localStorageKey);
+}
+
+export async function client(endpoint, { body, ...customConfig } = {}) {
+  const token = window.localStorage.getItem(localStorageKey);
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
   const config = {
     method: body ? 'POST' : 'GET',
     ...customConfig,
@@ -17,16 +26,19 @@ export async function client(endpoint, { body, ...customConfig } = {}) {
     config.body = JSON.stringify(body);
   }
 
-  let data;
   try {
     const response = await window.fetch(endpoint, config);
-    data = await response.json();
+    console.log(response);
+    if (response.status === 401) {
+      logout();
+    }
+    const data = await response.json();
     if (response.ok) {
       return data;
     }
-    throw new Error(response.statusText);
+    return Promise.reject(data.message);
   } catch (err) {
-    return Promise.reject(err.message ? err.message : data);
+    return Promise.reject(err.message);
   }
 }
 

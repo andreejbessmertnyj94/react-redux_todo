@@ -12,7 +12,6 @@ import {
 
 export default function TasksToDoCounter() {
   const requestStatus = useSelector(selectRequestStatus);
-
   const numOfTasksToDo = useSelector(selectNumOfTasksToDo);
 
   const dispatch = useDispatch();

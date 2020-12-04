@@ -9,7 +9,6 @@ const tasksAdapter = createEntityAdapter();
 
 const initialState = tasksAdapter.getInitialState({
   status: 'idle',
-  error: null,
 });
 
 function modifyPayload(payload) {
@@ -39,7 +38,6 @@ export const tasksSlice = createSlice({
     },
     [thunks.fetchTasks.rejected]: (state, action) => {
       state.status = 'failed';
-      state.error = action.error.message;
     },
     [thunks.addNewTask.fulfilled]: (state, action) => {
       tasksAdapter.addMany(state, modifyPayload(action.payload));
