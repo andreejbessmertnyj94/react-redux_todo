@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Redirect, Route } from 'react-router-dom';
 
-import { client, localStorageKey } from './api-client';
+import { client } from './api-client';
 import { setAlert } from './reducers/actionsSlice';
 
 /** For more details on
@@ -11,6 +11,7 @@ import { setAlert } from './reducers/actionsSlice';
  */
 
 const authContext = createContext();
+export const localStorageKey = 'auth_token';
 
 export function ProvideAuth({ children }) {
   const auth = useProvideAuth();
