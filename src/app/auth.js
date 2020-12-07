@@ -76,16 +76,16 @@ function useProvideAuth() {
         password,
       });
       dispatch(
-          setAlert({ message: response.message, alertType: 'alert-success' })
+        setAlert({ message: response.message, alertType: 'alert-success' })
       );
       await new Promise((r) => setTimeout(r, 1000));
-      history.push("/login")
+      history.push('/login');
     } catch (err) {
       dispatch(
-          setAlert({
-            message: `Failed to register: ${err}`,
-            alertType: 'alert-danger',
-          })
+        setAlert({
+          message: `Failed to register: ${err}`,
+          alertType: 'alert-danger',
+        })
       );
     }
   };
