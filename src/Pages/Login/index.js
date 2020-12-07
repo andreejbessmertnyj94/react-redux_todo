@@ -11,8 +11,7 @@ import Alert from '../../Components/Alert';
 import { useAuth } from '../../app/auth';
 
 export default function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [fields, setFields] = useState({ username: '', password: '' });
 
   const auth = useAuth();
 
@@ -21,25 +20,29 @@ export default function Login() {
 
   const dispatch = useDispatch();
 
-  const onUsernameChanged = useCallback((e) => setUsername(e.target.value), [
-    setUsername,
-  ]);
+  const onUsernameChanged = useCallback(
+    (e) => setFields({ username: e.target.value, password: fields.password }),
+    [fields.password]
+  );
 
-  const onPasswordChanged = useCallback((e) => setPassword(e.target.value), [
-    setPassword,
-  ]);
+  const onPasswordChanged = useCallback(
+    (e) => setFields({ password: e.target.value, username: fields.username }),
+    [fields.username]
+  );
 
   const canSave = useMemo(
     () =>
-      0 < username.length && 0 < password.length && requestStatus === 'idle',
-    [username, password, requestStatus]
+      0 < fields.username.length &&
+      0 < fields.password.length &&
+      requestStatus === 'idle',
+    [fields, requestStatus]
   );
 
   const onFormSubmit = async (e) => {
     e.preventDefault();
     if (canSave) {
       dispatch(setBusy());
-      await auth.signIn(username, password);
+      await auth.signIn(fields.username, fields.password);
       dispatch(setIdle());
     }
   };
@@ -51,7 +54,7 @@ export default function Login() {
         <label htmlFor="inputUsername">Username</label>
         <input
           type="username"
-          value={username}
+          value={fields.username}
           onChange={onUsernameChanged}
           className="form-control"
           id="inputUsername"
@@ -61,7 +64,7 @@ export default function Login() {
         <label htmlFor="inputPassword">Password</label>
         <input
           type="password"
-          value={password}
+          value={fields.password}
           onChange={onPasswordChanged}
           className="form-control"
           id="inputPassword"

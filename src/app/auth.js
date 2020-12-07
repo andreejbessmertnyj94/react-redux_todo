@@ -100,7 +100,7 @@ function useProvideAuth() {
 }
 
 export function PrivateRoute({ children, inv = false, ...rest }) {
-  /**                 |  private  |  inverse private
+  /**                  |  private  |  inverse private
    * authenticated     |   child   |     "/"
    * not authenticated | "/login"  |    child
    */
@@ -111,14 +111,16 @@ export function PrivateRoute({ children, inv = false, ...rest }) {
       render={({ location }) =>
         auth.isAuthenticated === !inv ? (
           children
-        ) : inv ? (
-          <Redirect to="/" />
         ) : (
           <Redirect
-            to={{
-              pathname: '/login',
-              state: { from: location },
-            }}
+            to={
+              inv
+                ? '/'
+                : {
+                    pathname: '/login',
+                    state: { from: location },
+                  }
+            }
           />
         )
       }
