@@ -3,10 +3,6 @@
 
 export const localStorageKey = 'auth_token';
 
-export function logout() {
-  localStorage.removeItem(localStorageKey);
-}
-
 export async function client(endpoint, { body, ...customConfig } = {}) {
   const token = window.localStorage.getItem(localStorageKey);
   const headers = { 'Content-Type': 'application/json' };
@@ -28,9 +24,8 @@ export async function client(endpoint, { body, ...customConfig } = {}) {
 
   try {
     const response = await window.fetch(endpoint, config);
-    console.log(response);
     if (response.status === 401) {
-      logout();
+      window.localStorage.removeItem(localStorageKey);
     }
     const data = await response.json();
     if (response.ok) {

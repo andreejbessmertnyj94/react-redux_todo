@@ -1,21 +1,20 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 
 import {
   selectRequestStatus,
   selectAlert,
   setBusy,
   setIdle,
-  setAlert,
 } from '../../app/reducers/actionsSlice';
-import { client, localStorageKey } from '../../app/api-client';
 import Alert from '../../Components/Alert';
+import { useAuth } from '../../app/auth';
 
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [redirect, setRedirect] = useState(undefined);
+
+  const auth = useAuth();
 
   const requestStatus = useSelector(selectRequestStatus);
   const alert = useSelector(selectAlert);
@@ -39,36 +38,13 @@ export default function Login() {
   const onFormSubmit = async (e) => {
     e.preventDefault();
     if (canSave) {
-      try {
-        dispatch(setBusy());
-        const response = await client.post('/users/login', {
-          username,
-          password,
-        });
-        setUsername('');
-        setPassword('');
-        localStorage.setItem(localStorageKey, response.data.token);
-        dispatch(
-          setAlert({ message: response.message, alertType: 'alert-success' })
-        );
-        await new Promise((r) => setTimeout(r, 2000));
-        setRedirect(true);
-      } catch (err) {
-        dispatch(
-          setAlert({
-            message: `Failed to login: ${err}`,
-            alertType: 'alert-danger',
-          })
-        );
-      } finally {
-        dispatch(setIdle());
-      }
+      dispatch(setBusy());
+      await auth.signIn(username, password);
+      dispatch(setIdle());
     }
   };
 
-  return redirect ? (
-    <Redirect to="/" />
-  ) : (
+  return (
     <form onSubmit={onFormSubmit}>
       {alert && <Alert />}
       <div className="form-group">

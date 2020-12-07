@@ -1,19 +1,22 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import {
   selectRequestStatus,
   selectAlert,
   setBusy,
   setIdle,
-  setAlert,
 } from '../../app/reducers/actionsSlice';
-import { client } from '../../app/api-client';
 import Alert from '../../Components/Alert';
+import { useAuth } from '../../app/auth';
 
 export default function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const auth = useAuth();
+  const history = useHistory();
 
   const requestStatus = useSelector(selectRequestStatus);
   const alert = useSelector(selectAlert);
@@ -37,27 +40,9 @@ export default function Register() {
   const onFormSubmit = async (e) => {
     e.preventDefault();
     if (canSave) {
-      try {
-        dispatch(setBusy());
-        const response = await client.post('/users/register', {
-          username,
-          password,
-        });
-        setUsername('');
-        setPassword('');
-        dispatch(
-          setAlert({ message: response.message, alertType: 'alert-success' })
-        );
-      } catch (err) {
-        dispatch(
-          setAlert({
-            message: `Failed to register: ${err}`,
-            alertType: 'alert-danger',
-          })
-        );
-      } finally {
-        dispatch(setIdle());
-      }
+      dispatch(setBusy());
+      await auth.signUp(username, password, history);
+      dispatch(setIdle());
     }
   };
 
