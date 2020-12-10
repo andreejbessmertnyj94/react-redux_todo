@@ -24,7 +24,7 @@ export async function client(endpoint, { body, ...customConfig } = {}) {
 
   try {
     const response = await window.fetch(
-      `${process.env.REST_SERVER_URL}${endpoint}`,
+      `${process.env.REACT_APP_REST_SERVER_URL}${endpoint}`,
       config
     );
     if (response.status === 401) {
