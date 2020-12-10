@@ -3,8 +3,6 @@
 
 import { localStorageKey } from './auth';
 
-const rest_server_url = 'http://localhost:3001';
-
 export async function client(endpoint, { body, ...customConfig } = {}) {
   const token = window.localStorage.getItem(localStorageKey);
   const headers = { 'Content-Type': 'application/json' };
@@ -26,7 +24,7 @@ export async function client(endpoint, { body, ...customConfig } = {}) {
 
   try {
     const response = await window.fetch(
-      `${rest_server_url}${endpoint}`,
+      `${process.env.REST_SERVER_URL}${endpoint}`,
       config
     );
     if (response.status === 401) {
