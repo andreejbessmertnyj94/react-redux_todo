@@ -14,12 +14,15 @@ const initialState = tasksAdapter.getInitialState({
 function modifyPayload(payload) {
   // change mongodb ids to redux ids format
   return payload.map((obj) => {
-    Object.defineProperty(
-      obj,
-      'id',
-      Object.getOwnPropertyDescriptor(obj, '_id')
-    );
-    delete obj['_id'];
+    if (obj.hasOwnProperty('_id')) {
+      Object.defineProperty(
+        obj,
+        'id',
+        Object.getOwnPropertyDescriptor(obj, '_id')
+      );
+      delete obj['_id'];
+    }
+
     return obj;
   });
 }
