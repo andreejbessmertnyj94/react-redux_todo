@@ -19,10 +19,10 @@ function App() {
           <NavBar />
 
           <Switch>
-            <PrivateRoute inv={true} exact path="/register">
+            <PrivateRoute inverse={true} exact path="/register">
               <Register />
             </PrivateRoute>
-            <PrivateRoute inv={true} exact path="/login">
+            <PrivateRoute inverse={true} exact path="/login">
               <Login />
             </PrivateRoute>
             <PrivateRoute exact path="/logout">

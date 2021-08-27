@@ -1,41 +1,51 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { client } from '../api-client';
 
-export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async () => {
-  const response = await client.get('/tasks/list');
-  return response.data;
-});
+const pathPrefix = 'tasks';
 
-export const addNewTask = createAsyncThunk(
-  'tasks/addNewTask',
-  async (initialTask) => {
-    const response = await client.post('/tasks/create', { ...initialTask });
+export const fetchTasks = createAsyncThunk(
+  `${pathPrefix}/fetchTasks`,
+  async () => {
+    const response = await client.get(`/${pathPrefix}/list`);
     return response.data;
   }
 );
 
-export const updateTask = createAsyncThunk(
-  'tasks/updateTask',
-  async (update) => {
-    const response = await client.patch(`/tasks/${update['id']}/update`, {
-      ...update,
+export const addNewTask = createAsyncThunk(
+  `${pathPrefix}/addNewTask`,
+  async (initialTask) => {
+    const response = await client.post(`/${pathPrefix}/create`, {
+      ...initialTask,
     });
     return response.data;
   }
 );
 
+export const updateTask = createAsyncThunk(
+  `${pathPrefix}/updateTask`,
+  async (update) => {
+    const response = await client.patch(
+      `/${pathPrefix}/${update['id']}/update`,
+      {
+        ...update,
+      }
+    );
+    return response.data;
+  }
+);
+
 export const deleteTask = createAsyncThunk(
-  'tasks/deleteTask',
+  `${pathPrefix}/deleteTask`,
   async (task_id) => {
-    const response = await client.delete(`/tasks/${task_id}/delete`);
+    const response = await client.delete(`/${pathPrefix}/${task_id}/delete`);
     return response.data;
   }
 );
 
 export const markAllTasksCompleted = createAsyncThunk(
-  'tasks/markAllTasksCompleted',
+  `${pathPrefix}/markAllTasksCompleted`,
   async () => {
-    const response = await client.patch('/tasks/list/update', {
+    const response = await client.patch(`/${pathPrefix}/list/update`, {
       completed: true,
     });
     return response.data;
@@ -43,9 +53,9 @@ export const markAllTasksCompleted = createAsyncThunk(
 );
 
 export const deleteCompletedTasks = createAsyncThunk(
-  'tasks/deleteCompletedTasks',
+  `${pathPrefix}/deleteCompletedTasks`,
   async () => {
-    const response = await client.delete('/tasks/list/delete', {
+    const response = await client.delete(`/${pathPrefix}/list/delete`, {
       completed: true,
     });
     return response.data;
